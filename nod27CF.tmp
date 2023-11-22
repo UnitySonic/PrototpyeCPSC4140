@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://deiytmtdx0dpu"]
+
+[ext_resource type="Script" path="res://Node2D.gd" id="1_prd5n"]
+[ext_resource type="Script" path="res://User.gd" id="2_gwm8t"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="AStarNodes" type="Node2D" parent="."]
+script = ExtResource("1_prd5n")
+
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("2_gwm8t")
