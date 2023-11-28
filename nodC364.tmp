@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://deiytmtdx0dpu"]
+
+[ext_resource type="Script" path="res://Node2D.gd" id="1_prd5n"]
+[ext_resource type="Script" path="res://User.gd" id="2_gwm8t"]
+[ext_resource type="Script" path="res://TextEdit.gd" id="3_dte2c"]
+
+[node name="ShopInterface" type="Node2D"]
+
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("2_gwm8t")
+
+[node name="AStarNodes" type="Node2D" parent="."]
+script = ExtResource("1_prd5n")
+
+[node name="TextEdit" type="TextEdit" parent="."]
+offset_right = 8.0
+offset_bottom = 8.0
+script = ExtResource("3_dte2c")

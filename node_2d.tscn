@@ -1,12 +1,55 @@
-[gd_scene load_steps=3 format=3 uid="uid://deiytmtdx0dpu"]
+[gd_scene load_steps=5 format=3 uid="uid://deiytmtdx0dpu"]
 
 [ext_resource type="Script" path="res://Node2D.gd" id="1_prd5n"]
 [ext_resource type="Script" path="res://User.gd" id="2_gwm8t"]
+[ext_resource type="Script" path="res://Control.gd" id="3_yryn3"]
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="CanvasTexture" id="CanvasTexture_5rild"]
+
+[node name="ShopInterface" type="Node2D"]
+
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("2_gwm8t")
 
 [node name="AStarNodes" type="Node2D" parent="."]
 script = ExtResource("1_prd5n")
 
-[node name="Player" type="Node2D" parent="."]
-script = ExtResource("2_gwm8t")
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_yryn3")
+
+[node name="Searchbar" type="LineEdit" parent="Control"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 50.0
+alignment = 1
+max_length = 400
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 50.0
+offset_right = 300.0
+offset_bottom = 450.0
+
+[node name="items" type="VBoxContainer" parent="Control/ScrollContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Control/ScrollContainer/items"]
+layout_mode = 2
+text = "Bananna"
+icon = SubResource("CanvasTexture_5rild")
+
+[node name="Button2" type="Button" parent="Control/ScrollContainer/items"]
+layout_mode = 2
+text = "Apple"
+
+[connection signal="gui_input" from="Control/Searchbar" to="Control" method="_on_searchbar_gui_input"]
+[connection signal="mouse_entered" from="Control/Searchbar" to="Control" method="_on_searchbar_mouse_entered"]
+[connection signal="mouse_exited" from="Control/Searchbar" to="Control" method="_on_searchbar_mouse_exited"]
+[connection signal="text_changed" from="Control/Searchbar" to="Control" method="_on_searchbar_text_changed"]
+[connection signal="pressed" from="Control/ScrollContainer/items/Button" to="AStarNodes" method="_on_button_pressed"]
+[connection signal="pressed" from="Control/ScrollContainer/items/Button" to="Control" method="_on_button_pressed"]

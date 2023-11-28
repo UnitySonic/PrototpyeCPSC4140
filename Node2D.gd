@@ -1,7 +1,33 @@
 extends Node2D
 
-export var astar = AStar2D.new()
+var astar = AStar2D.new();
+var startNode = null
+var endNode = null
 var path
+
+var groceryItems = {
+	"bananna" : 0,
+	"apples" : 1,
+	"broccoli" : 2,
+	"grapes" : 3,
+	"peppers": 4,	
+	"tea" : 11,
+	"cookies": 12,
+	"soda" : 13,
+	"chips": 14,
+	"water" :15	,
+	"proteinShake" : 16,
+	"trashBag" : 23,
+	"plates" : 24,
+	"vacuumCleaner": 25,
+	"umbrella" : 26,
+	"measuringTape": 27
+	
+	
+}
+
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -52,7 +78,7 @@ func _ready():
 	astar.add_point(25 ,Vector2(950, 325), 4)
 	astar.add_point(26 ,Vector2(950, 425), 4)
 	astar.add_point(27, Vector2(950, 525), 4)
-	path = astar.get_point_path(23,27)
+	
 	
 	
 	#Point Connections
@@ -77,6 +103,19 @@ func _ready():
 	astar.connect_points(9,17)
 	
 	astar.connect_points(10,18)
+	astar.connect_points(18, 19)
+	astar.connect_points(19, 24)
+	
+	astar.connect_points(19,20)
+	astar.connect_points(20,25)
+	
+	astar.connect_points(20,21)
+	astar.connect_points(21,22)
+	astar.connect_points(21, 26)
+	astar.connect_points(21,16)
+	
+	
+	
 	astar.connect_points(17,22)
 	
 	
@@ -90,10 +129,40 @@ func _ready():
 	astar.connect_points(18,23)
 	astar.connect_points(22	,27)
 	
-	path = astar.get_point_path(0,27)
-
+	startNode = 0
+	endNode = 27
 	
+	
+
+
+# 2D Space
+func distance_2d(point1: Vector2, point2: Vector2) -> float:
+	return sqrt(pow(point2.x - point1.x, 2) + pow(point2.y - point1.y, 2))
+	
+
+
+#Calculates Node Nearest to the Player and draws a line between them
+func calculateNearestNode():
+	var shortestDistance = 10000
+	var pointIDToReturn = 1
+	
+	
+	var listofPoints = astar.get_point_ids()
+	
+	for pointID in listofPoints:
+		var currentNodePosition = astar.get_point_position(pointID)
+		var distance = distance_2d(get_node("../Player").position, currentNodePosition)
+		if distance < shortestDistance:
+			shortestDistance = distance
+			pointIDToReturn = pointID
+	
+	startNode = pointIDToReturn
+	
+	
+	return pointIDToReturn
+
 func draw_path_lines():
+	path = astar.get_point_path(startNode,endNode)
 	if path.size() < 2:
 		return  # Not enough points to draw a line
 
@@ -102,7 +171,12 @@ func draw_path_lines():
 		var end_point = path[i+1]
 		draw_line(start_point, end_point, Color(0, 0, 255), 1)  # Draw a green line between consecutive points
 	
+
+func drawPlayerToLine():
+	var start_point = get_node("../Player").getPosition()
+	var end_point = astar.get_point_position(calculateNearestNode())
 	
+	draw_line(start_point, end_point, Color(0,0,255), 1)
 
 func getAstar():
 	return astar
@@ -127,10 +201,16 @@ func _draw():
 	# Clear previous drawings
 	drawNodes()
 	draw_path_lines()
+	drawPlayerToLine()
 	
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	set_process(true)
+	queue_redraw()
 	
+
+
+func _on_button_pressed(button):
+	print(button.text)
