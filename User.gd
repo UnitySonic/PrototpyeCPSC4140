@@ -1,10 +1,12 @@
 extends Node2D
 
-var aStarGrids = load("res://Node2D.gd")
+
 var moveSpeed = 1.5
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
+
+signal itemCollected
 	
 
 
@@ -32,6 +34,10 @@ func _process(delta):
 		direction.y += 1
 	if Input.is_action_pressed("ui_up"):
 		direction.y -= 1
+	
+	if Input.is_action_just_pressed("ui_accept"):
+		itemCollected.emit()
+		
 		
 
 	# Normalize the direction to ensure consistent speed in all directions
@@ -42,5 +48,4 @@ func _process(delta):
 	position += direction * moveSpeed
 
 
-func _on_searchbar_text_changed(new_text):
-	pass # Replace with function body.
+

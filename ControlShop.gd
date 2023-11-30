@@ -56,12 +56,20 @@ func _input(event):
 		elif event.global_position.x > 400:
 			# Mouse click is outside the search bar bounds, hide the other element
 			
-			otherElement.visible = false
+			otherElement.visible = true
 	
 
 
 func _on_button_pressed():
 	var button = $ScrollContainer/items/Button
+	
+	$ScrollContainer2/items/ZIPButton.visible = true
+	
+	$ScrollContainer/items/Button.visible = false
+	$ScrollContainer/items/Button2.visible = false
+	$ScrollContainer/items/Button3.visible = false
+	
+	
 	
 	bananna.emit(removeMode)
 	
@@ -81,31 +89,10 @@ func _on_button_3_pressed():
 	var label = button.get_node("Label")
 	
 
-func _on_remove_button_pressed():
-	removeMode = not removeMode
-	
-	var button = $removeButton
-	
-	var button1 = $ScrollContainer/items/Button
-	var button2 = $ScrollContainer/items/Button2
-	var button3 = $ScrollContainer/items/Button3
-	
-	if removeMode:
-		button.modulate = Color(255,0,0)
-		button1.modulate = Color(255,0,0)
-		button2.modulate = Color(255,0,0)
-		button3.modulate = Color(255,0,0)
-		
-	else:
-		button.modulate = Color(1,1,1, 1)
-		button1.modulate = Color(1,1, 1)
-		button2.modulate = Color(1,1,1)
-		button3.modulate = Color(1,1,1)
+
 	
 
 
-func _on_exit_button_pressed():
-	get_tree().change_scene_to_file("res://store_search.tscn")
-
-
-
+func _on_zip_button_pressed():
+	get_tree().change_scene_to_file("res://node_2d.tscn")
+	

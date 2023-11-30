@@ -5,10 +5,12 @@ var startNode = null
 var endNode = null
 var path
 
+
+
 var groceryItems = {
-	"bananna" : 0,
-	"apples" : 1,
-	"broccoli" : 2,
+	"bananna" : [0, 5],
+	"apple" : [1,10],
+	"broccoli" : [2,0],
 	"grapes" : 3,
 	"peppers": 4,	
 	"tea" : 11,
@@ -17,7 +19,7 @@ var groceryItems = {
 	"chips": 14,
 	"water" :15	,
 	"proteinShake" : 16,
-	"trashBag" : 23,
+	"trashBags" : [23, 1],
 	"plates" : 24,
 	"vacuumCleaner": 25,
 	"umbrella" : 26,
@@ -25,6 +27,34 @@ var groceryItems = {
 	
 	
 }
+
+var trackedList = {}
+var currentTrackedItem = null
+
+
+func addItem(item):
+	
+	if groceryItems[item][1] <= 0:
+		$N_A.set_displayed_text("N/A")
+		return
+	trackedList[item] = 1
+	print(startNode)
+	calculateNextItem()
+	
+
+func removeItem(item):
+	trackedList.erase(item)
+	currentTrackedItem = null
+	calculateNextItem()
+
+func collectCurrentItem():
+	
+	groceryItems[currentTrackedItem][1] = groceryItems[currentTrackedItem][1] -1
+	
+	
+	removeItem(currentTrackedItem)
+	calculateNextItem()
+	
 
 
 
@@ -129,8 +159,8 @@ func _ready():
 	astar.connect_points(18,23)
 	astar.connect_points(22	,27)
 	
-	startNode = 0
-	endNode = 27
+
+	
 	
 	
 
@@ -159,9 +189,44 @@ func calculateNearestNode():
 	startNode = pointIDToReturn
 	
 	
+	
 	return pointIDToReturn
 
+
+#This function sets up the endpoint
+
+
+func compute_cost(start, end):
+	var currentPath = astar.get_id_path(start, end)
+	var totalCost = 0
+	for point in currentPath:
+		totalCost += astar.get_point_weight_scale(point)
+	
+	return totalCost  
+	
+	
+
+func calculateNextItem():
+	var costPointID =  [1000, 1000]
+	currentTrackedItem = null
+	endNode = null
+	
+	for item in trackedList:
+		var groceryPointID = groceryItems[item][0]
+		
+		var cost = compute_cost(startNode, groceryPointID)
+		if cost < costPointID[0]:
+			costPointID = [cost, groceryPointID]
+			currentTrackedItem = item
+			endNode = costPointID[1]
+	
+	
+
+
 func draw_path_lines():
+	if startNode == null or endNode == null:
+		return
+	
 	path = astar.get_point_path(startNode,endNode)
 	if path.size() < 2:
 		return  # Not enough points to draw a line
@@ -170,9 +235,12 @@ func draw_path_lines():
 		var start_point = path[i]
 		var end_point = path[i+1]
 		draw_line(start_point, end_point, Color(0, 0, 255), 1)  # Draw a green line between consecutive points
+		
 	
 
 func drawPlayerToLine():
+	if endNode == null:
+		return
 	var start_point = get_node("../Player").getPosition()
 	var end_point = astar.get_point_position(calculateNearestNode())
 	
@@ -208,9 +276,47 @@ func _draw():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	set_process(true)
+	print(startNode)
+	calculateNearestNode()
+	
+	var displayText = "Currently Tracking: None"
+	
+	if currentTrackedItem != null:
+		displayText = "Currently Tracking: " + currentTrackedItem
+	$TextEdit.set_displayed_text(displayText)
+	
+	
 	queue_redraw()
 	
 
 
-func _on_button_pressed(button):
-	print(button.text)
+
+
+
+func _on_control_apple(removeMode):
+	var item = "apple"
+	if removeMode:
+		removeItem(item)
+	else:
+		addItem(item)
+
+
+func _on_control_bananna(removeMode):
+	
+	var item = "bananna"
+	if removeMode:
+		removeItem(item)
+	else:
+		addItem(item)
+
+
+func _on_control_trash_bags(removeMode):
+	var item = "trashBags"
+	if removeMode:
+		removeItem(item)
+	else:
+		addItem(item)
+
+
+func _on_collect_item_pressed():
+	collectCurrentItem()

@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3 uid="uid://iqymvrornmuy"]
+
+[ext_resource type="Script" path="res://ControlShop.gd" id="1_g2rjy"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_shwnm"]
+
+[node name="StoreSearch" type="Node2D"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_g2rjy")
+
+[node name="Searchbar" type="LineEdit" parent="Control"]
+layout_mode = 0
+offset_left = 354.0
+offset_top = 7.0
+offset_right = 786.0
+offset_bottom = 54.0
+alignment = 1
+max_length = 400
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control"]
+clip_contents = false
+layout_mode = 0
+offset_left = 527.0
+offset_top = 89.0
+offset_right = 644.0
+offset_bottom = 207.0
+
+[node name="items" type="VBoxContainer" parent="Control/ScrollContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Control/ScrollContainer/items"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Test_Store"
+icon = SubResource("CanvasTexture_shwnm")
+
+[node name="Button2" type="Button" parent="Control/ScrollContainer/items"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Walmart"
+
+[node name="Button3" type="Button" parent="Control/ScrollContainer/items"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Kroeger"
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="Control"]
+clip_contents = false
+offset_left = 667.0
+offset_top = 98.0
+offset_right = 762.0
+offset_bottom = 207.0
+
+[node name="items" type="VBoxContainer" parent="Control/ScrollContainer2"]
+layout_mode = 2
+
+[node name="ZIPButton" type="Button" parent="Control/ScrollContainer2/items"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+text = "29631"
+icon = SubResource("CanvasTexture_shwnm")
+
+[connection signal="gui_input" from="Control/Searchbar" to="Control" method="_on_searchbar_gui_input"]
+[connection signal="mouse_entered" from="Control/Searchbar" to="Control" method="_on_searchbar_mouse_entered"]
+[connection signal="mouse_exited" from="Control/Searchbar" to="Control" method="_on_searchbar_mouse_exited"]
+[connection signal="text_changed" from="Control/Searchbar" to="Control" method="_on_searchbar_text_changed"]
+[connection signal="pressed" from="Control/ScrollContainer/items/Button" to="Control" method="_on_button_pressed"]
+[connection signal="pressed" from="Control/ScrollContainer/items/Button2" to="Control" method="_on_button_2_pressed"]
+[connection signal="pressed" from="Control/ScrollContainer/items/Button3" to="Control" method="_on_button_3_pressed"]
+[connection signal="pressed" from="Control/ScrollContainer2/items/ZIPButton" to="Control" method="_on_zip_button_pressed"]
